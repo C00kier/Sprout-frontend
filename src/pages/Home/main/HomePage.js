@@ -3,12 +3,10 @@ import "./HomePage.css";
 
 import HomePageDesktop from "../desktop/HomePageDesktop";
 import HomePageMobile from "../mobile/HomePageMobile";
-import HomePageDesktopLogged from "../desktopLogged/HomePageDesktopLogged";
-import HomePageMobileLogged from "../mobileLogged/HomePageMobileLogged";
+
 
 export default function HomePage() {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
 
     useEffect(() => {
         const handleWindowResize = () => {
@@ -26,15 +24,9 @@ export default function HomePage() {
     return (
         <>
             {
-                isUserLoggedIn
-                    ? (
-                        windowWidth < 436
-                            ? <HomePageMobileLogged />
-                            : <HomePageDesktopLogged />)
-                    : (
-                        windowWidth < 436
-                            ? <HomePageMobile />
-                            : <HomePageDesktop />)
+                windowWidth < 436
+                    ? <HomePageMobile />
+                    : <HomePageDesktop />
             }
         </>
     )
