@@ -1,0 +1,23 @@
+.home-page-desktop-logged-functionality-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: fit-content;
+}
+.user-game-progress-div-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    height: fit-content;
+    overflow-y: auto;
+}
+
+.home-page-desktop-logged-content{
+    display: flex;
+    flex-direction: row;
+}
+
+
+

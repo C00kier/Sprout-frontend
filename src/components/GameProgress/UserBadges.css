@@ -1,0 +1,8 @@
+.user-badges-div-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.badges-text-div{
+    text-align: left;
+}

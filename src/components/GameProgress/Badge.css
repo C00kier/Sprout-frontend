@@ -1,0 +1,8 @@
+.single-badge-div-container img{
+    width: 100px;
+    height: auto;
+}
+.single-badge-div-container{
+    width: 20%;
+    padding: 10px;
+}

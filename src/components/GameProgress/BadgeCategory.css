@@ -1,0 +1,13 @@
+.badge-category-div-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 150px;
+}
+.badge-category-name-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: calc(1.5vh + 1vw);
+    width: 40%;
+}
