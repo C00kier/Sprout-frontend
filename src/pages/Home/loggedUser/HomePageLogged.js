@@ -16,7 +16,9 @@ import AccountSidebar from "../../../components/AccountSidebar/AccountSidebar.js
 
 export const functionalityElementContext = React.createContext();
 
-export default function HomePageDesktopLogged() {
+
+export default function HomePageDesktopLogged({userId,token}) {
+
     const [functionalityElement, setFunctionalityElement] = useState(COMPONENT_STATE.COCKPIT);
 
     function renderFunctionalityElement() {
@@ -25,7 +27,7 @@ export default function HomePageDesktopLogged() {
                 return <Cockpit />;
             }
             case COMPONENT_STATE.RECOMMENDATION: {
-                return <Recommendation />;
+                return <Recommendation userId={userId} token={token}/>;
             }
             case COMPONENT_STATE.MY_PLANTS: {
                 return <MyPlants />;
@@ -34,16 +36,16 @@ export default function HomePageDesktopLogged() {
                 return <Badges />;
             }
             case COMPONENT_STATE.SETTINGS: {
-                return <Settings />;
+                return <Settings setFunctionalityElement={setFunctionalityElement} userId={userId}/>;
             }
             case COMPONENT_STATE.QUIZ: {
-                return <Quiz />;
+                return <Quiz userId={userId} token={token}/>;
             }
         }
     }
 
     return (
-        <div className="home-page-logged-container flex-column-center-center">
+        <div className="home-page-logged-container">
             <functionalityElementContext.Provider value={setFunctionalityElement}>
                 <div className="home-page-logged-content flex-row-center-center">
                     <div className="home-page-logged-sidebar-container">

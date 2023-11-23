@@ -1,11 +1,13 @@
 import "./RegisterPage.css";
-import { useState} from "react";
+import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import eyeShow from "../../assets/RegisterPage/eyeShow.png";
 import eyeHide from "../../assets/RegisterPage/eyeHide.png";
 import { useNavigate } from "react-router-dom";
 
-export default function RegisterPage() {
+export default function RegisterPage(props) {
+  const {setCookie} = props;
+
   const [showRules, setShowRules] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -19,11 +21,11 @@ export default function RegisterPage() {
 
 
   const navigate = useNavigate();
-  const navigateToLogin=()=>{
-        navigate("/login");
-    }
-  const navigateToHome=()=>{
-      navigate("/");
+  const navigateToLogin = () => {
+    navigate("/login");
+  }
+  const navigateToHome = () => {
+    navigate("/");
   }
 
   function emailInputChangeEvent(e) {
@@ -41,13 +43,15 @@ export default function RegisterPage() {
     const targetValue = e.target.value;
     const passwordRegex =
       /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
-    if (targetValue.match(passwordRegex)|| targetValue.length === 0) {
+    if (targetValue.match(passwordRegex) || targetValue.length === 0) {
       setIsPasswordValid(true);
       setFormData((prevData) => ({ ...prevData, password: targetValue }));
     } else {
       setIsPasswordValid(false);
     }
   }
+
+  
 
   function eyeIconEvent() {
     setIsPasswordShown(!isPasswordShown);
@@ -56,36 +60,37 @@ export default function RegisterPage() {
   const handleAcceptRules = () => {
     setFormData((prevData) => ({ ...prevData, acceptRules: !prevData.acceptRules }));
     setIsTermsMpromptShown(false);
-    };
+  };
 
   const handleRegisterClick = () => {
     const requestData = {
       email: formData.email,
       password: formData.password,
     };
-    if (formData.acceptRules === true){
-    fetch("http://localhost:8080/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    })
-      .then((response) => {
-    
-      if (response.status === 200) navigateToHome()
-      return response.json();
+    if (formData.acceptRules === true) {
+      fetch("http://localhost:8080/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
       })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
-      else {
-        setIsTermsMpromptShown(true);
-      }
+        .then((response) => {
+
+          if (response.status === 200) navigateToHome();
+          return response.json();
+        })
+        .then((data) => {
+          setCookie("token", data.token, {path: "/"});
+          setCookie("userId", data.userId, {path: "/"});
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+    else {
+      setIsTermsMpromptShown(true);
+    }
   };
   const handleGoogleSignIn = (request) => {
     fetch("http://localhost:8080/auth/authenticate/google", {
@@ -96,18 +101,20 @@ export default function RegisterPage() {
       body: JSON.stringify(request),
     })
       .then((response) => {
-        if (response.status === 200){
+        if (response.status === 200) {
           navigateToHome();
         }
-        return response.json()})
+        return response.json()
+      })
       .then((data) => {
-        console.log(data);
+        setCookie("token", data.token, {path: "/"});
+        setCookie("userId", data.userId, {path: "/"});
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }
-  
+
 
   return (
     <>
@@ -167,7 +174,7 @@ export default function RegisterPage() {
               }
             >
               * Hasło musi zawierać 8-16 znaków, conajmniej 1 cyfrę i znak
-              specjalny"
+              specjalny
             </p>
             <div id="register-button-section">
               <div id="accept-rules">
@@ -180,9 +187,9 @@ export default function RegisterPage() {
                 >
                   regulamin
                 </p><p className={
-                isTermsMpromptShown
-                  ? "informative-text-incorrect": "informative-text-correct"
-              } id="accept-rules-"> * Aby zarejestrować się, zaakceptuj regulamin</p>
+                  isTermsMpromptShown
+                    ? "informative-text-incorrect" : "informative-text-correct"
+                } id="accept-rules-"> * Aby zarejestrować się, zaakceptuj regulamin</p>
               </div>
               <p id="rodo-text">
                 Twoje dane osobowe będą wykorzystywane aby dostosować działanie
@@ -192,8 +199,8 @@ export default function RegisterPage() {
               </p>
               <div id="register-button" onClick={handleRegisterClick}>
                 <span>Zarejestruj</span>
-                </div>
-                <div className="have-account-container">
+              </div>
+              <div className="have-account-container">
                 <p>Masz już konto?</p><p className="hyper-link" onClick={navigateToLogin}>zaloguj się!</p></div>
               <GoogleLogin
                 onSuccess={(credentialResponse) => {
